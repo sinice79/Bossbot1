@@ -1011,10 +1011,10 @@ while True:
 			command_list += ','.join(command[2]) + '\n'     #설정확인
 			command_list += ','.join(command[3]) + '\n'     #채널확인
 			command_list += ','.join(command[4]) + ' [채널명]\n'     #채널이동
-			command_list += ','.join(command[5]) + '\n'     #입장, /음성초기화
+			command_list += ','.join(command[5]) + '\n'     #입장, /입장, /음성초기화
 			command_list += ','.join(command[6]) + '\n'     #불러오기
-			command_list += ','.join(command[7]) + '\n'     #초기화
-			command_list += ','.join(command[8]) + '\n'     #정신차려, 명치
+			command_list += ','.join(command[7]) + '\n'     #초기화, /보스초기화
+			command_list += ','.join(command[8]) + '\n'     #정신차려, /정신차려, 명치
 			command_list += ','.join(command[9]) + '\n'     #재시작
 			command_list += ','.join(command[10]) + '\n'     #미예약
 			command_list += ','.join(command[11]) + ' [퍼센트] [금액]\n'     #페이백
@@ -1022,8 +1022,8 @@ while True:
 			command_list += ','.join(command[27]) + ' [아이디1] [아이디2]...(최대 12명)\n'     #경주
 			command_list += ','.join(command[13]) + ' [아이디]\n'     #정산
 			command_list += ','.join(command[14]) + ' 또는 ' + ','.join(command[14]) + ' 0000, 00:00\n'     #보스일괄
-			command_list += ','.join(command[15]) + '\n'     #빠른보스, !ㅂ, !q, !Q
-			command_list += ','.join(command[16]) + ' [할말]\n'     #v, V, !ㅍ, !v, !V
+			command_list += ','.join(command[15]) + '\n'     #빠른보스, !ㅂ, !q, !Q, /q, /Q
+			command_list += ','.join(command[16]) + ' [할말]\n'     #v, V, !ㅍ, !v, !V, /v, /v1
 			command_list += ','.join(command[17]) + '\n'     #리젠
 			command_list += ','.join(command[18]) + '\n'     #현재시간
 			command_list += ','.join(command[24]) + '\n'     #킬초기화
@@ -1034,7 +1034,7 @@ while True:
 			command_list += ','.join(command[19]) + ' [공지내용]\n'     #공지
 			command_list += ','.join(command[20]) + '\n'     #공지삭제, 공삭
 			command_list += ','.join(command[21]) + ' [할말]\n\n'     #상태
-			command_list += ','.join(command[22]) + '\n'     #보스, /보스, /?
+			command_list += ','.join(command[22]) + '\n'     #보스, /보스, /?, /보탐
 			command_list += ','.join(command[23]) + '\n'     #!보스
 			command_list += '[보스명]컷 또는 [보스명]컷 0000, 00:00\n[보스명] 컷 또는 [보스명] 컷 0000, 00:00\n'     
 			command_list += '[보스명]멍 또는 [보스명]멍 0000, 00:00\n[보스명] 멍 또는 [보스명] 멍 0000, 00:00\n'     
