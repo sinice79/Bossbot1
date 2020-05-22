@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*- 
 
-################ Server V16.3 #####################
+################ Server V16.4 #####################
 
 import os
 import sys
@@ -1095,7 +1095,7 @@ while True:
 			command_list += ','.join(command[17]) + '\n'     #!리젠, 리젠
 			command_list += ','.join(command[18]) + '\n'     #!현재시간, 현재시간
 			command_list += ','.join(command[24]) + '\n'     #!킬초기화, 킬초기화
-			command_list += ','.join(command[25]) + '\n'     #!킬횟수 확인
+			command_list += ','.join(command[25]) + '\n'     #!킬횟수 확인, 킬횟수 확인
 			command_list += ','.join(command[25]) + ' [아이디]\n'     #!킬, 킬
 			command_list += ','.join(command[26]) + ' [아이디]\n'     #!킬삭제, 킬삭제
 			command_list += ','.join(command[19]) + '\n'     #!공지, 공지
@@ -1105,11 +1105,10 @@ while True:
 			command_list += ','.join(command[28]) + ' 사다리, 정산, 척살, 경주\n\n'     #!채널설정, 채널설정
 			command_list += ','.join(command[22]) + '\n'     #보스탐, 보스, /보스, /?, /보탐
 			command_list += ','.join(command[23]) + '\n'     #!보스탐, !보스
-			command_list += '[보스명]컷 또는 [보스명]컷 0000, 00:00\n[보스명] 컷 또는 [보스명] 컷 0000, 00:00\n'  
-			command_list += '[보스명]멍 또는 [보스명]멍 0000, 00:00\n[보스명] 멍 또는 [보스명] 멍 0000, 00:00\n'   
-			command_list += '[보스명]예상 또는 [보스명]예상 0000, 00:00\n[보스명] 예상 또는 [보스명] 예상 0000, 00:00\n'     
-			command_list += '[보스명]예상 또는 [보스명]예상 0000, 00:00\n' 
-			command_list += '[보스명]삭제 또는 [보스명] 삭제\n'     
+			command_list += '[보스명]컷 또는 [보스명]컷 0000, 00:00\n[보스명] 컷 또는 [보스명] 컷 0000, 00:00\n'
+			command_list += '[보스명]멍 또는 [보스명]멍 0000, 00:00\n[보스명] 멍 또는 [보스명] 멍 0000, 00:00\n'
+			command_list += '[보스명]예상 또는 [보스명]예상 0000, 00:00\n[보스명] 예상 또는 [보스명] 예상 0000, 00:00\n'
+			command_list += '[보스명]삭제 또는 [보스명] 삭제\n'
 			command_list += '[보스명]메모 [할말] 또는 [보스명] 메모 [할말]\n'
 			embed = discord.Embed(
 					title = "----- 명령어 -----",
@@ -1129,7 +1128,7 @@ while True:
 	async def setting_(ctx):	
 		#print (ctx.message.channel.id)
 		if ctx.message.channel.id == basicSetting[7]:
-			setting_val = '보탐봇버전 : Server Ver. 16.3 (2020. 5. 14.)\n'
+			setting_val = '보탐봇버전 : Server Ver. 16.4 (2020. 5. 22.)\n'
 			setting_val += '음성채널 : ' + client.get_channel(basicSetting[6]).name + '\n'
 			setting_val += '텍스트채널 : ' + client.get_channel(basicSetting[7]).name +'\n'
 			if basicSetting[8] != "" :
@@ -1147,7 +1146,7 @@ while True:
 					title = "----- 설정내용 -----",
 					description= f'```{setting_val}```',
 					color=0xff00ff
-					)					
+					)
 			await ctx.send(embed=embed, tts=False)
 		else:
 			return
@@ -1508,7 +1507,7 @@ while True:
 			separate_money = []
 			separate_money = msg.split(" ")
 			num_sep = floor(int(separate_money[0]))
-			nepan = (int(separate_money[1])) * ( int(separate_money[0]) / 100 )			
+			nepan = (int(separate_money[1])) * ( int(separate_money[0]) / 100 )
 			cal_tax1 = floor(float(separate_money[1])*0.05)
 			real_money = floor(floor(float(separate_money[1])*0.95))
 			if num_sep == 0 :
@@ -2601,6 +2600,7 @@ while True:
 						tmp_now = datetime.datetime.now() + datetime.timedelta(hours = int(basicSetting[0]))
 
 						if len(hello) > len(tmp_msg) + 3 :
+							temptime = tmp_now
 							if hello.find(':') != -1 :
 								chkpos = hello.find(':')
 								hours1 = hello[chkpos-2:chkpos] 
@@ -2612,29 +2612,24 @@ while True:
 								minutes1 = hello[chkpos:chkpos+2]					
 								temptime = tmp_now.replace(hour=int(hours1), minute=int(minutes1))
 							
-							nextTime = temptime + datetime.timedelta(hours = int(bossData[i][1]), minutes = int(bossData[i][5]))
-							
 							bossMungCnt[i] = 0
 							bossFlag[i] = False
 							bossFlag0[i] = False
 							bossMungFlag[i] = False
-							bossMungCnt[i] = bossMungCnt[i] + 1
 
-							if nextTime > tmp_now :
-								nextTime = nextTime + datetime.timedelta(days=int(-1))
+							if temptime > tmp_now :
+								temptime = temptime + datetime.timedelta(days=int(-1))
 
-							if nextTime < tmp_now :
+							if temptime < tmp_now :
 								deltaTime = datetime.timedelta(hours = int(bossData[i][1]), minutes = int(bossData[i][5]))
-								while tmp_now > nextTime :
-									nextTime = nextTime + deltaTime
+								while temptime < tmp_now :
+									temptime = temptime + deltaTime
 									bossMungCnt[i] = bossMungCnt[i] + 1
-							else :
-								nextTime = nextTime
 
-							tmp_bossTime[i] = bossTime[i] = nextTime				
+							tmp_bossTime[i] = bossTime[i] = temptime				
 
-							tmp_bossTimeString[i] = bossTimeString[i] = nextTime.strftime('%H:%M:%S')
-							tmp_bossDateString[i] = bossDateString[i] = nextTime.strftime('%Y-%m-%d')
+							tmp_bossTimeString[i] = bossTimeString[i] = temptime.strftime('%H:%M:%S')
+							tmp_bossDateString[i] = bossDateString[i] = temptime.strftime('%Y-%m-%d')
 							embed = discord.Embed(
 									description= '```다음 ' + bossData[i][0] + ' ' + bossTimeString[i] + '입니다.```',
 									color=0xff0000
