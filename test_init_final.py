@@ -1214,9 +1214,11 @@ while True:
 			command_list += ','.join(command[8]) + '\n'     #!명치
 			command_list += ','.join(command[9]) + '\n'     #!재시작
 			command_list += ','.join(command[10]) + '\n'     #!미예약
-			command_list += ','.join(command[11]) + ' [퍼센트] [금액]\n'     #!페이백
+			command_list += ','.join(command[11]) + ' [인원] [금액]\n'     #!분배
 			command_list += ','.join(command[12]) + ' [뽑을인원수] [아이디1] [아이디2]...\n'     #!사다리
 			command_list += ','.join(command[27]) + ' [아이디1] [아이디2]...(최대 12명)\n'     #!경주
+			command_list += ','.join(command[35]) + ' [판매금액] (거래소세금)\n'     #!수수료
+			command_list += ','.join(command[36]) + ' [거래소금액] [실거래금액] (거래소세금)\n'     #!페이백
 			command_list += ','.join(command[13]) + ' [아이디]\n'     #!정산
 			command_list += ','.join(command[14]) + ' 또는 ' + ','.join(command[14]) + ' 0000, 00:00\n'     #!보스일괄
 			command_list += ','.join(command[15]) + '\n'     #!q
@@ -1256,7 +1258,7 @@ while True:
 					)
 			embed.add_field(
 					name="----- 추가기능 -----",
-					value= '```- [보스명]컷/멍/예상  [할말] : 보스시간 입력 후 빈칸 두번!! 메모 가능\n- [보스명]컷/멍/예상 명령어는 초성으로 입력가능합니다.\n  ex)' + bossData[0][0] + '컷 => ' + convertToInitialLetters(bossData[0][0] +'컷') + ', ' + bossData[0][0] + ' 컷 => ' + convertToInitialLetters(bossData[0][0] +' 컷') + '```'
+					value= '```- [보스명]컷/멍/예상  [할말] : 보스시간 입력 후 빈칸 두번!! 메모 가능\n- [보스명]컷/멍/예상/삭제 명령어는 초성으로 입력가능합니다.\n  ex)' + bossData[0][0] + '컷 => ' + convertToInitialLetters(bossData[0][0] +'컷') + ', ' + bossData[0][0] + ' 컷 => ' + convertToInitialLetters(bossData[0][0] +' 컷') + '```'
 					)
 			await ctx.send( embed=embed, tts=False)
 		else:
@@ -1578,7 +1580,7 @@ while True:
 			await voice_client1.disconnect()
 			#await FixedBossDateSave()
 			#await client.get_channel(channel).send('<보탐봇 재시작 중... 갑자기 인사해도 놀라지마세요!>', tts=False)
-			print("보탐봇강제재시작!")
+			print("보탐봇 강제 재시작!")
 			await asyncio.sleep(2)
 
 			inidata_restart = repo_restart.get_contents("restart.txt")
@@ -1655,23 +1657,24 @@ while True:
 		else:
 			return
 
-	################ 페이백 결과 출력 ################ 
+	################ 분배 결과 출력 ################ 
 	@client.command(name=command[11][0], aliases=command[11][1:])
 	async def bunbae_(ctx):
-		if ctx.message.channel.id == basicSetting[7] or ctx.message.channel.id == basicSetting[11]:
+		if ctx.message.channel.id == basicSetting[7]:
 			msg = ctx.message.content[len(ctx.invoked_with)+1:]
 			separate_money = []
 			separate_money = msg.split(" ")
 			num_sep = floor(int(separate_money[0]))
-			nepan = (int(separate_money[1])) * ( int(separate_money[0]) / 100 )			
 			cal_tax1 = floor(float(separate_money[1])*0.05)
-			real_money = floor(floor(float(separate_money[1])*0.95))
+			
+			real_money = floor(floor(float(separate_money[1])) - cal_tax1)
+			cal_tax2 = floor(real_money/num_sep) - floor(float(floor(real_money/num_sep))*0.95)
 			if num_sep == 0 :
-				await ctx.send('```페이백 금액이 0%입니다. 재입력 해주세요.```', tts=False)
+				await ctx.send('```분배 인원이 0입니다. 재입력 해주세요.```', tts=False)
 			else :
 				embed = discord.Embed(
-					title = "----- 페이백 계산 ----- \n(수수료 구매자 부담)",
-					description= '```수수료 : ' + str(cal_tax1) + '\n판매완료가격 : ' + str(real_money) + '\n내판가격 : ' + str(int(nepan)) + '\n페이백 금액 : ' + str(int(real_money - nepan)) + '```',
+					title = "----- 분배결과! -----",
+					description= '```1차 세금 : ' + str(cal_tax1) + '\n1차 수령액 : ' + str(real_money) + '\n분배자 거래소등록금액 : ' + str(floor(real_money/num_sep)) + '\n2차 세금 : ' + str(cal_tax2) + '\n인당 실수령액 : ' + str(floor(float(floor(real_money/num_sep))*0.95)) + '```',
 					color=0xff00ff
 					)
 				await ctx.send(embed=embed, tts=False)
@@ -1689,7 +1692,7 @@ while True:
 				num_cong = int(ladder[0])
 				del(ladder[0])
 			except ValueError:
-				return await ctx.send('```뽑을 인원은 숫자로 입력바랍니다\nex)사다리 1 아뒤1 아뒤2 아뒤3 ...```')
+				return await ctx.send('```뽑을 인원은 숫자로 입력바랍니다\nex)!사다리 1 가 나 다 ...```')
 			await LadderFunc(num_cong, ladder, ctx)
 		else:
 			return
@@ -2659,16 +2662,37 @@ while True:
 			if not args:
 				sorted_item_list = sorted(item_Data.items(), key=lambda x: x[0])
 
+				embed_list : list = []
+				embed_index : int = 0
+				embed_cnt : int = 0
 				embed = discord.Embed(title = '', description = f'`{client.user.name}\'s 창고`', color = 0x00ff00)
+				
+				embed_list.append(embed)
 
 				if len(sorted_item_list) > 0 :
 					for item_id, count in sorted_item_list:
-						embed.add_field(name = item_id, value = count)
+						embed_cnt += 1
+						if embed_cnt > 24 :
+							embed_cnt = 0
+							embed_index += 1
+							tmp_embed = discord.Embed(
+								title = "",
+								description = "",
+								color=0x00ff00
+								)
+							embed_list.append(tmp_embed)
+						embed_list[embed_index].add_field(name = item_id, value = count)
+					embed_list[len(embed_list)-1].set_footer(text = f"전체 아이템 종류  :  {len(item_Data)}개")
+					if len(embed_list) > 1:
+						for embed_data in embed_list:
+							await asyncio.sleep(0.1)
+							await ctx.send(embed = embed_data)
+						return
+					else:
+						return await ctx.send(embed=embed, tts=False)
 				else :
 					embed.add_field(name = '\u200b\n', value = '창고가 비었습니다.\n\u200b')
-
-				embed.set_footer(text = f"전체 아이템 종류  :  {len(item_Data)}개")
-				return await ctx.send(embed=embed, tts=False)
+					return await ctx.send(embed=embed, tts=False)
 
 			input_data = args.split()
 			
@@ -2792,6 +2816,94 @@ while True:
 				return await ctx.send(f"```[{guild_name}] 서버에서 떠났습니다.!```")
 			except ValueError:
 				return			
+
+	################ 수수료 계산기 ################ 
+	@client.command(name=command[35][0], aliases=command[35][1:])
+	async def tax_check(ctx, *, args : str = None):
+		if ctx.message.channel.id == basicSetting[7] or ctx.message.channel.id == basicSetting[22]:
+			if not args:
+				return await ctx.send(f"**{command[35][0]} [판매금액] (거래소세금)** 양식으로 입력 해주세요\n※ 거래소세금은 미입력시 5%입니다.")
+			
+			input_money_data : list = args.split()
+			len_input_money_data = len(input_money_data)
+
+			try:
+				for i in range(len_input_money_data):
+					input_money_data[i] = int(input_money_data[i])
+			except ValueError:
+				return await ctx.send(f"**[판매금액] (거래소세금)**은 숫자로 입력 해주세요.")
+
+			if len_input_money_data < 1 or len_input_money_data > 3:
+				return await ctx.send(f"**{command[35][0]} [판매금액] (거래소세금)** 양식으로 입력 해주세요\n※ 거래소세금은 미입력시 5%입니다.")
+			elif len_input_money_data == 2:
+				tax = input_money_data[1]
+			else:
+				tax = 5
+
+			price_first_tax = int(input_money_data[0] * ((100-tax)/100))
+			price_second_tax = int(price_first_tax * ((100-tax)/100))
+			price_rev_tax = int((input_money_data[0] * 100)/(100-tax)+0.5)
+
+			embed = discord.Embed(
+					title = f"🧮  수수료 계산결과 (세율 {tax}% 기준) ",
+					description = f"",
+					color=0x00ff00
+					)
+			embed.add_field(name = "⚖️ 수수료 지원", value = f"```등록가 : {price_rev_tax}\n수령가 : {input_money_data[0]}\n세 금 : {price_rev_tax-input_money_data[0]}```")
+			embed.add_field(name = "⚖️ 1차 거래", value = f"```등록가 : {input_money_data[0]}\n정산가 : {price_first_tax}\n세 금 : {input_money_data[0]-price_first_tax}```")
+			embed.add_field(name = "⚖️ 2차 거래", value = f"```등록가 : {price_first_tax}\n정산가 : {price_second_tax}\n세 금 : {price_first_tax-price_second_tax}```")
+			return await ctx.send(embed = embed)
+		else:
+			return
+
+	################ 페이백 계산기 ################ 
+	@client.command(name=command[36][0], aliases=command[36][1:])
+	async def payback_check(ctx, *, args : str = None):
+		if ctx.message.channel.id == basicSetting[7] or ctx.message.channel.id == basicSetting[22]:
+			if not args:
+				return await ctx.send(f"**{command[36][0]} [거래소가격] [실거래가] (거래소세금)** 양식으로 입력 해주세요\n※ 거래소세금은 미입력시 5%입니다.")
+			
+			input_money_data : list = args.split()
+			len_input_money_data = len(input_money_data)
+
+			try:
+				for i in range(len_input_money_data):
+					input_money_data[i] = int(input_money_data[i])
+			except ValueError:
+				return await ctx.send(f"**[판매금액] (거래소세금)**은 숫자로 입력 해주세요.")
+
+			if len_input_money_data < 2 or len_input_money_data > 4:
+				return await ctx.send(f"**{command[36][0]} [거래소가격] [실거래가] (거래소세금)** 양식으로 입력 해주세요\n※ 거래소세금은 미입력시 5%입니다.")
+			elif len_input_money_data == 3:
+				tax = input_money_data[2]
+			else:
+				tax = 5
+
+			price_reg_tax = int(input_money_data[0] * ((100-tax)/100))
+			price_real_tax = int(input_money_data[1] * ((100-tax)/100))
+
+			reault_payback = price_reg_tax - price_real_tax
+			reault_payback1= price_reg_tax - input_money_data[1]
+
+			embed = discord.Embed(
+					title = f"🧮  페이백 계산결과[지원] (세율 {tax}% 기준) ",
+					description = f"**```fix\n{reault_payback}```**",
+					color=0x00ff00
+					)
+			embed.add_field(name = "⚖️ 거래소", value = f"```등록가 : {input_money_data[0]}\n정산가 : {price_reg_tax}\n세 금 : {input_money_data[0]-price_reg_tax}```")
+			embed.add_field(name = "🕵️ 실거래", value = f"```등록가 : {input_money_data[1]}\n정산가 : {price_real_tax}\n세 금 : {input_money_data[1]-price_real_tax}```")
+			await ctx.send(embed = embed)
+
+			embed2 = discord.Embed(
+					title = f"🧮  페이백 계산결과[본인] (세율 {tax}% 기준) ",
+					description = f"**```fix\n{reault_payback1}```**",
+					color=0x00ff00
+					)
+			embed2.add_field(name = "⚖️ 거래소", value = f"```등록가 : {input_money_data[0]}\n정산가 : {price_reg_tax}\n세 금 : {input_money_data[0]-price_reg_tax}```")
+			embed2.add_field(name = "🕵️ 실거래", value = f"```내판가 : {input_money_data[1]}```")
+			return await ctx.send(embed = embed2)
+		else:
+			return
 
 	################ ?????????????? ################ 
 	@client.command(name='!오빠')
@@ -3017,7 +3129,7 @@ while True:
 						
 				################ 예상 보스 타임 입력 ################ 
 
-					if message.content.startswith(bossData[i][0] +'예상')  or message.content.startswith(convertToInitialLetters(bossData[i][0] +'예상')) or message.content.startswith(bossData[i][0] +' 예상') or message.content.startswith(convertToInitialLetters(bossData[i][0] +' 예상')):
+					if message.content.startswith(bossData[i][0] +'예상') or message.content.startswith(convertToInitialLetters(bossData[i][0] +'예상')) or message.content.startswith(bossData[i][0] +' 예상') or message.content.startswith(convertToInitialLetters(bossData[i][0] +' 예상')):
 						if hello.find('  ') != -1 :
 							bossData[i][6] = hello[hello.find('  ')+2:]
 							hello = hello[:hello.find('  ')]
