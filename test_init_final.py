@@ -1593,7 +1593,7 @@ class mainCog(commands.Cog):
 				num_cong = int(ladder[0])
 				del(ladder[0])
 			except ValueError:
-				return await ctx.send('```뽑을 인원은 숫자로 입력바랍니다\nex)!사다리 1 아이디1 아이디2 아이디3 ...```')
+				return await ctx.send('```뽑을 인원은 숫자로 입력바랍니다\nex)사다리 1 아이디1 아이디2 아이디3 ...```')
 			await LadderFunc(num_cong, ladder, ctx)
 		else:
 			return
