@@ -750,7 +750,7 @@ class taskCog(commands.Cog):
 						continue
 					continue
 				t.cancel()
-		await ctx.send( '< 보탐봇 정신차리고 숨 고르기 중! 접속완료 후 명령어 입력 해주세요! >', tts=False)
+		await ctx.send( '< 보탐봇 재시작 중... 갑자기 인사해도 놀라지마세요! >', tts=False)
 		print("정신차려!")
 		await dbSave()
 		await data_list_Save("kill_list.ini", "-----척살명단-----", kill_Data)
@@ -811,7 +811,7 @@ class taskCog(commands.Cog):
 				voice_client1 = await self.bot.get_channel(basicSetting[6]).connect(reconnect=True)
 				if voice_client1.is_connected() :
 					await dbLoad()
-					await self.bot.get_channel(channel).send( '< 보탐봇 재시작 중... 갑자기 인사해도 놀라지마세요! >', tts=False)
+					await self.bot.get_channel(channel).send( '< 보탐봇 정신차리고 숨 고르기 중! 접속완료 후 명령어 입력 해주세요! >', tts=False)
 					print("복구완료!")
 
 		while not self.bot.is_closed():
