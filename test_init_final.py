@@ -516,7 +516,7 @@ async def task():
 				await FixedBossDateSave()
 				await data_list_Save("kill_list.ini", "-----척살명단-----", kill_Data)
 				await data_list_Save("item_list.ini", "-----아이템목록-----", item_Data)
-				#await client.get_channel(channel).send('<보탐봇 재접속 완료! 접속완료 후 명령어 입력 해주세요!>', tts=False)
+				await client.get_channel(channel).send('<보탐봇 재접속 완료! 접속완료 후 명령어 입력 해주세요!>', tts=False)
 				print("보탐봇 재시작!")
 				endTime = endTime + datetime.timedelta(days = int(basicSetting[13]))
 				await voice_client1.disconnect()
