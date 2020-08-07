@@ -997,7 +997,7 @@ class taskCog(commands.Cog):
 
 			await asyncio.sleep(1) # task runs every 60 seconds
 
-		await boss_check()
+		boss_task = asyncio.get_event_loop().create_task(self.boss_check())
 
 class mainCog(commands.Cog): 
 	def __init__(self, bot):
@@ -2787,7 +2787,7 @@ class mainCog(commands.Cog):
 			reault_payback1= price_reg_tax - input_money_data[1]
 
 			embed = discord.Embed(
-					title = f"🧮  페이백 계산결과[지원] (세율 {tax}% 기준) ",
+					title = f"🧮  페이백 계산결과[혈맹지원] (세율 {tax}% 기준) ",
 					description = f"**```fix\n{reault_payback}```**",
 					color=0x00ff00
 					)
@@ -2796,7 +2796,7 @@ class mainCog(commands.Cog):
 			await ctx.send(embed = embed)
 
 			embed2 = discord.Embed(
-					title = f"🧮  페이백 계산결과[본인] (세율 {tax}% 기준) ",
+					title = f"🧮  페이백 계산결과[본인부담] (세율 {tax}% 기준) ",
 					description = f"**```fix\n{reault_payback1}```**",
 					color=0x00ff00
 					)
@@ -2915,7 +2915,7 @@ class IlsangDistributionBot(commands.AutoShardedBot):
 
 		# 디스코드에는 현재 본인이 어떤 게임을 플레이하는지 보여주는 기능이 있습니다.
 		# 이 기능을 사용하여 봇의 상태를 간단하게 출력해줄 수 있습니다.
-		await self.change_presence(status=discord.Status.online, activity=discord.Game(name="<도움말 명령어 메뉴>", type=1), afk=False)
+		await self.change_presence(status=discord.Status.online, activity=discord.Game(name="<메뉴 명령어 도움말>", type=1), afk=False)
 
 	async def on_message(self, msg):
 		await self.wait_until_ready()
