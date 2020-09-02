@@ -1705,7 +1705,7 @@ class mainCog(commands.Cog):
 			embed.add_field(name = "👥 참가자", value =  f"```fix\n{', '.join(join_member)}```", inline=False)
 			embed.add_field(name = "😍 당첨", value =  f"```fix\n{', '.join(win_member)}```")
 			embed.add_field(name = "😭 낙첨", value =  f"```{', '.join(lose_member)}```")
-			return await ctx.send(ctx.send, embed = embed)
+			return await ctx.send(embed = embed)
 		else:
 			return
 
