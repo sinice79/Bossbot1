@@ -7,3 +7,4 @@ pyssml
 gspread
 oauth2client
 PyOpenSSL
+boto3
