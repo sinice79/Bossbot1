@@ -3050,7 +3050,7 @@ class mainCog(commands.Cog):
 		for i in range(len(inputData_voice_use)):
 			if inputData_voice_use[i].startswith("voice_use ="):
 				inputData_voice_use[i] = f"voice_use = 1\r"
-				basicSetting[7] = channel
+				basicSetting[21] = "1"
 		
 		result_voice_use = '\n'.join(inputData_voice_use)
 		
@@ -3076,19 +3076,20 @@ class mainCog(commands.Cog):
 				ctx.voice_client.stop()
 			await ctx.voice_client.disconnect(force=True)
 
-		inidata_text = open('test_setting.ini', 'r', encoding = 'utf-8')
-		inputData_text = inidata_text.readlines()
-		inidata_text.close()
-	
-		inidata_text = open('test_setting.ini', 'w', encoding = 'utf-8')				
-		for i in range(len(inputData_text)):
-			if inputData_text[i].startswith("voice_use ="):
-				inputData_text[i] = f"voice_use = 0\n"
-				basicSetting[25] = "0"
+		inidata_voice_use = repo.get_contents("test_setting.ini")
+		file_data_voice_use = base64.b64decode(inidata_voice_use.content)
+		file_data_voice_use = file_data_voice_use.decode('utf-8')
+		inputData_voice_use = file_data_voice_use.split('\n')
 		
-		inidata_text.writelines(inputData_text)
-		inidata_text.close()
-
+		for i in range(len(inputData_voice_use)):
+			if inputData_voice_use[i].startswith("voice_use ="):
+				inputData_voice_use[i] = f"voice_use = 0\r"
+				basicSetting[21] = "0"
+		
+		result_voice_use = '\n'.join(inputData_voice_use)
+		
+		contents = repo.get_contents("test_setting.ini")
+		repo.update_file(contents.path, "test_setting", result_voice_use, contents.sha)
 		return await ctx.send(f"```보이스를 사용하지 않도록 설정하였습니다.```")
 
 	################ ?????????????? ################ 
@@ -3165,7 +3166,8 @@ class IlsangDistributionBot(commands.AutoShardedBot):
 			if basicSetting[21] == "1" and str(basicSetting[6]) in channel_voice_id:
 				await self.get_channel(basicSetting[6]).connect(reconnect=True)
 				print('< 음성채널 [' + self.get_channel(basicSetting[6]).name + '] 접속완료>')
-			else:
+				await self.get_channel(basicSetting[6]).connect(reconnect=True)
+			elif basicSetting[21] == "1" and str(basicSetting[6]) not in channel_voice_id:
 				print(f"설정된 음성채널 값이 없거나 잘못 됐습니다. 음성채널 접속 후 **[{command[5][0]}]** 명령어 먼저 입력하여 사용해주시기 바랍니다.")
 				await self.get_channel(int(basicSetting[7])).send(f"설정된 음성채널 값이 없거나 잘못 됐습니다. 음성채널 접속 후 **[{command[5][0]}]** 명령어 먼저 입력하여 사용해주시기 바랍니다.")
 			if basicSetting[8] != "":
