@@ -2061,13 +2061,17 @@ class mainCog(commands.Cog):
 			sayMessage = msg
 			try:
 				await MakeSound(ctx.message.author.display_name +'님이, ' + sayMessage, './sound/say')
-				await ctx.send("```< " + ctx.author.display_name + " >님이 \"" + sayMessage + "\"```", tts=False)
+			except:
+				await ctx.send( f"```음성파일 생성에 실패하였습니다.(amazon polly 사용시 키 값을 확인하세요!)```")
+				return
+			await ctx.send("```< " + ctx.author.display_name + " >님이 \"" + sayMessage + "\"```", tts=False)
+			try:
 				if aws_key != "" and aws_secret_key != "":
 					await PlaySound(ctx.voice_client, './sound/say.mp3')
 				else:
 					await PlaySound(ctx.voice_client, './sound/say.wav')
 			except:
-				await ctx.send( f"```음성 접속에 문제가 있거나 음성채널에 접속되지 않은 상태입니다!```")
+				await ctx.send( f"```음성파일 재생에 실패하였습니다. 접속에 문제가 있거나 음성채널에 접속 되지 않은 상태입니다!```")
 				return
 		else:  
 			return
@@ -2178,20 +2182,20 @@ class mainCog(commands.Cog):
 					if bossMungFlag[i] == True :
 						aa.append(tmp_bossTime[i])                       #output_bossData[1] : 시간
 
-						if datetime.datetime.now().strftime('%Y-%m-%d') == tmp_bossTime[i].strftime('%Y-%m-%d'):
-							aa.append(tmp_bossTime[i].strftime('%H:%M'))
-						else:
-							aa.append(f"[{tmp_bossTime[i].strftime('%Y-%m-%d')}] {tmp_bossTime[i].strftime('%H:%M')}")
+						# if (datetime.datetime.now() + datetime.timedelta(hours=int(basicSetting[0]))).strftime('%Y-%m-%d') == tmp_bossTime[i].strftime('%Y-%m-%d'):
+						# 	aa.append(tmp_bossTime[i].strftime('%H:%M'))
+						# else:
+						# 	aa.append(f"[{tmp_bossTime[i].strftime('%Y-%m-%d')}] {tmp_bossTime[i].strftime('%H:%M')}")
 
 						# aa.append(tmp_bossTime[i].strftime('%H:%M'))  #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(tmp_bossTime[i].strftime('%H:%M'))  
 						aa.append('-')	                                 #output_bossData[3] : -
 					else :
 						aa.append(bossTime[i])                           #output_bossData[1] : 시간
 
-						if datetime.datetime.now().strftime('%Y-%m-%d') == bossTime[i].strftime('%Y-%m-%d'):
-							aa.append(bossTime[i].strftime('%H:%M'))
-						else:
-							aa.append(f"[{bossTime[i].strftime('%Y-%m-%d')}] {bossTime[i].strftime('%H:%M')}")
+						# if (datetime.datetime.now() + datetime.timedelta(hours=int(basicSetting[0]))).strftime('%Y-%m-%d') == bossTime[i].strftime('%Y-%m-%d'):
+						# 	aa.append(bossTime[i].strftime('%H:%M'))
+						# else:
+						# 	aa.append(f"[{bossTime[i].strftime('%Y-%m-%d')}] {bossTime[i].strftime('%H:%M')}")
 
 						# aa.append(bossTime[i].strftime('%H:%M'))      #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(bossTime[i].strftime('%H:%M'))  
 						aa.append('+')	                                 #output_bossData[3] : +
@@ -2351,7 +2355,7 @@ class mainCog(commands.Cog):
 					if bossMungFlag[i] == True :
 						aa.append(tmp_bossTime[i])                       #output_bossData[1] : 시간
 
-						if datetime.datetime.now().strftime('%Y-%m-%d') == tmp_bossTime[i].strftime('%Y-%m-%d'):
+						if (datetime.datetime.now() + datetime.timedelta(hours=int(basicSetting[0]))).strftime('%Y-%m-%d') == tmp_bossTime[i].strftime('%Y-%m-%d'):
 							aa.append(tmp_bossTime[i].strftime('%H:%M'))
 						else:
 							aa.append(f"[{tmp_bossTime[i].strftime('%Y-%m-%d')}] {tmp_bossTime[i].strftime('%H:%M')}")
@@ -2361,7 +2365,7 @@ class mainCog(commands.Cog):
 					else :
 						aa.append(bossTime[i])                           #output_bossData[1] : 시간
 
-						if datetime.datetime.now().strftime('%Y-%m-%d') == bossTime[i].strftime('%Y-%m-%d'):
+						if (datetime.datetime.now() + datetime.timedelta(hours=int(basicSetting[0]))).strftime('%Y-%m-%d') == bossTime[i].strftime('%Y-%m-%d'):
 							aa.append(bossTime[i].strftime('%H:%M'))
 						else:
 							aa.append(f"[{bossTime[i].strftime('%Y-%m-%d')}] {bossTime[i].strftime('%H:%M')}")
