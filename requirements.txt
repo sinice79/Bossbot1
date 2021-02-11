@@ -1,6 +1,6 @@
 websockets==6.0
 discord
-discord.py[voice]==1.6.0
+discord.py[voice]
 gtts
 PyGithub
 pyssml
