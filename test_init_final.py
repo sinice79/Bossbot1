@@ -901,7 +901,12 @@ class taskCog(commands.Cog):
 						continue
 					continue
 				t.cancel()
-		await ctx.send( '< 보탐봇 재시작 중... 갑자기 인사해도 놀라지마세요! >', tts=False)
+		# await ctx.send( '< 보탐봇 재시작 중... 갑자기 인사해도 놀라지마세요! >', tts=False)
+		try:
+			file = discord.File("./명치.JPG")
+			await ctx.send(file = file)
+		except:
+			await ctx.send( '< 보탐봇 재시작 중... 갑자기 인사해도 놀라지마세요! >', tts=False)
 		print("정신차려!")
 		await dbSave()
 		await data_list_Save("kill_list.ini", "-----척살명단-----", kill_Data)
@@ -2334,6 +2339,7 @@ class mainCog(commands.Cog):
 
 			tmp_boss_information = []
 			tmp_cnt = 0
+			tmp_time_delta = 0
 			tmp_boss_information.append('')
 
 			for i in range(bossNum):
@@ -2347,20 +2353,32 @@ class mainCog(commands.Cog):
 					if bossMungFlag[i] == True :
 						aa.append(tmp_bossTime[i])                       #output_bossData[1] : 시간
 
-						# if (datetime.datetime.now() + datetime.timedelta(hours=int(basicSetting[0]))).strftime('%Y-%m-%d') == tmp_bossTime[i].strftime('%Y-%m-%d'):
-						# 	aa.append(tmp_bossTime[i].strftime('%H:%M'))
-						# else:
-						# 	aa.append(f"[{tmp_bossTime[i].strftime('%Y-%m-%d')}] {tmp_bossTime[i].strftime('%H:%M')}")
+						tmp_time_delta = (tmp_bossTime[i].date() - (datetime.datetime.now() + datetime.timedelta(hours=int(basicSetting[0]))).date()).days
+						if tmp_time_delta == 0:
+							aa.append(tmp_bossTime[i].strftime('%H:%M'))
+						else:
+							if tmp_time_delta > 0:
+								aa.append(f"(+{tmp_time_delta}d) {tmp_bossTime[i].strftime('%H:%M')}")
+							else:
+								aa.append(f"({tmp_time_delta}d) {tmp_bossTime[i].strftime('%H:%M')}")
 
-						aa.append(tmp_bossTime[i].strftime('%H:%M'))  #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(tmp_bossTime[i].strftime('%H:%M'))  
+						tmp_time_delta = 0
+
+						# aa.append(tmp_bossTime[i].strftime('%H:%M'))  #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(tmp_bossTime[i].strftime('%H:%M'))  
 						aa.append('-')	                                 #output_bossData[3] : -
 					else :
 						aa.append(bossTime[i])                           #output_bossData[1] : 시간
 
-						# if (datetime.datetime.now() + datetime.timedelta(hours=int(basicSetting[0]))).strftime('%Y-%m-%d') == bossTime[i].strftime('%Y-%m-%d'):
-						# 	aa.append(bossTime[i].strftime('%H:%M'))
-						# else:
-						# 	aa.append(f"[{bossTime[i].strftime('%Y-%m-%d')}] {bossTime[i].strftime('%H:%M')}")
+						tmp_time_delta = (tmp_bossTime[i].date() - (datetime.datetime.now() + datetime.timedelta(hours=int(basicSetting[0]))).date()).days
+						if tmp_time_delta == 0:
+							aa.append(tmp_bossTime[i].strftime('%H:%M'))
+						else:
+							if tmp_time_delta > 0:
+								aa.append(f"(+{tmp_time_delta}d) {tmp_bossTime[i].strftime('%H:%M')}")
+							else:
+								aa.append(f"({tmp_time_delta}d) {tmp_bossTime[i].strftime('%H:%M')}")
+
+						tmp_time_delta = 0
 
 						aa.append(bossTime[i].strftime('%H:%M'))      #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(bossTime[i].strftime('%H:%M'))  
 						aa.append('+')	                                 #output_bossData[3] : +
