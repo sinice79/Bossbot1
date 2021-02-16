@@ -901,13 +901,13 @@ class taskCog(commands.Cog):
 						continue
 					continue
 				t.cancel()
-		# await ctx.send( '< 보탐봇 재시작 중... 갑자기 인사해도 놀라지마세요! >', tts=False)
+		# await ctx.send( '< 보탐봇 명치 맞고 숨 고르기 중! 잠시만요! >', tts=False)
 		try:
 			file = discord.File("./명치.JPG")
 			await ctx.send(file = file)
 		except:
-			await ctx.send( '< 보탐봇 재시작 중... 갑자기 인사해도 놀라지마세요! >', tts=False)
-		print("정신차려!")
+			await ctx.send( '< 보탐봇 명치 맞고 숨 고르기 중! 잠시만요! >', tts=False)
+		print("명치!")
 		await dbSave()
 		await data_list_Save("kill_list.ini", "-----척살명단-----", kill_Data)
 		await data_list_Save("item_list.ini", "-----아이템목록-----", item_Data)
@@ -919,9 +919,9 @@ class taskCog(commands.Cog):
 			await vc.disconnect(force=True)
 
 		if basicSetting[21] != "1":
-			print("복구완료!")
+			print("명치복구완료!")
 			await dbLoad()
-			await self.bot.get_channel(channel).send( '< 보탐봇 접속완료! (보이스 미사용) >', tts=False)
+			await self.bot.get_channel(channel).send( '< 다시 왔습니다!(보이스 미사용) >', tts=False)
 
 		self.checker = True
 
@@ -976,13 +976,13 @@ class taskCog(commands.Cog):
 					try:
 						await self.bot.get_channel(basicSetting[6]).connect(reconnect=True, timeout=5)
 						if self.bot.voice_clients[0].is_connected() :
-							await self.bot.get_channel(channel).send( '< 보탐봇 접속완료! >', tts=False)
+							await self.bot.get_channel(channel).send( '< 다시 왔습니다! >', tts=False)
 							self.checker = True
-							print("복구완료!")
+							print("명치복구완료!")
 					except:
 						await self.bot.get_channel(channel).send( '< 음성채널 접속 에러! >', tts=False)
 						self.checker = False
-						print("복구실패!")
+						print("명치복구실패!")
 						pass
 					await dbLoad()
 
@@ -1012,7 +1012,7 @@ class taskCog(commands.Cog):
 					await FixedBossDateSave()
 					await data_list_Save("kill_list.ini", "-----척살명단-----", kill_Data)
 					await data_list_Save("item_list.ini", "-----아이템목록-----", item_Data)
-					print("보탐봇 재시작!")
+					print("보탐봇재시작!")
 					endTime = endTime + datetime.timedelta(days = int(basicSetting[13]))
 					for voice_client in self.bot.voice_clients:
 						if voice_client.is_playing():
@@ -1038,11 +1038,11 @@ class taskCog(commands.Cog):
 						await self.bot.get_channel(basicSetting[6]).connect(reconnect=True, timeout=5)
 						print(f"{now.strftime('%Y-%m-%d %H:%M:%S')} : 음성 채널 자동 재접속완료!")
 					except discord.errors.ClientException as e:
-						print(f"{now.strftime('%Y-%m-%d %H:%M:%S')} : 음성 자동 접속 부분에서 서버 음성 채널 이미 접속 에러! : {e}")
+						print(f"{now.strftime('%Y-%m-%d %H:%M:%S')} : 음성 자동 접속 부분에서 서버 음성 채널 이미 접속 에러 : {e}")
 						self.checker = False
 						pass
 					except Exception as e:
-						print(f"{now.strftime('%Y-%m-%d %H:%M:%S')} : 음성 자동 접속 부분에서 서버 음성 채널 타임아웃 에러! : {e}")
+						print(f"{now.strftime('%Y-%m-%d %H:%M:%S')} : 음성 자동 접속 부분에서 서버 음성 채널 타임아웃 에러 : {e}")
 						self.checker = False
 						pass
 					if not self.bot.voice_clients[0].is_connected():
@@ -1294,7 +1294,7 @@ class mainCog(commands.Cog):
 			contents = repo.get_contents("test_setting.ini")
 			repo.update_file(contents.path, "test_setting", result_textCH, contents.sha)
 
-			await ctx.send(f"< 텍스트채널 [{ctx.message.channel.name}] 접속완료 >\n< 음성채널 접속 후 [{command[5][0]}] 명령을 사용 하세요. >", tts=False)
+			await ctx.send(f"< 텍스트채널 [{ctx.message.channel.name}] 접속완료 >\n< 음성채널 접속 후 [{command[5][0]}] 명령을 사용 하세요 >", tts=False)
 			
 			print('< 텍스트채널 [' + ctx.guild.get_channel(basicSetting[7]).name + '] 접속완료>')
 			if basicSetting[6] != "" and basicSetting[21] == "1":
@@ -1406,9 +1406,6 @@ class mainCog(commands.Cog):
 			command_list += ','.join(command[12]) + ' [뽑을인원수] [아이디1] [아이디2]...\n'     #!사다리
 			command_list += ','.join(command[27]) + ' [아이디1] [아이디2]...(최대 12명)\n'     #!경주
 			command_list += ','.join(command[41]) + ' [추첨인원] (대기시간/초) *(메모)\n'    #!럭키박스
-			command_list += ','.join(command[37]) + '\n'     #!가바보
-			command_list += ','.join(command[38]) + '\n'     #!보이스사용
-			command_list += ','.join(command[39]) + '\n'     #!보이스미사용
 			command_list += ','.join(command[35]) + ' [판매금액] (거래소세금)\n'     #!수수료
 			command_list += ','.join(command[36]) + ' [거래소금액] [실거래금액] (거래소세금)\n'     #!페이백
 			command_list += ','.join(command[13]) + ' [아이디]\n'     #!정산
@@ -1437,14 +1434,12 @@ class mainCog(commands.Cog):
 			command_list += ','.join(command[34]) + ' ※ 관리자만 실행 가능\n\n'     #서버나가기
 			command_list += ','.join(command[22]) + '\n'     #보스탐
 			command_list += ','.join(command[23]) + '\n'     #!보스탐
-			command_list += '[보스명]컷 또는 [보스명]컷 0000, 00:00\n'
-			command_list += '[보스명] 컷 또는 [보스명] 컷 0000, 00:00\n'
-			command_list += '[보스명]멍 또는 [보스명]멍 0000, 00:00\n'
-			command_list += '[보스명] 멍 또는 [보스명] 멍 0000, 00:00\n'
-			command_list += '[보스명]예상 또는 [보스명]예상 0000, 00:00\n'
-			command_list += '[보스명] 예상 또는 [보스명] 예상 0000, 00:00\n'
-			command_list += '[보스명]삭제 또는 [보스명] 삭제\n'
-			command_list += '[보스명]메모 [할말] 또는 [보스명] 메모 [할말]\n'
+			command_list += '[보스명]컷 또는 [보스명]컷 0000, 00:00\n'  
+			command_list += '[보스명] 컷 또는 [보스명] 컷 0000, 00:00\n'   
+			command_list += '[보스명]멍 또는 [보스명]멍 0000, 00:00\n'     
+			command_list += '[보스명]예상 또는 [보스명]예상 0000, 00:00\n' 
+			command_list += '[보스명]삭제\n'     
+			command_list += '[보스명]메모 [할말]\n'
 			embed = discord.Embed(
 					title = "----- 명령어 -----",
 					description= '```' + command_list + '```',
@@ -1452,7 +1447,7 @@ class mainCog(commands.Cog):
 					)
 			embed.add_field(
 					name="----- 추가기능 -----",
-					value= '```- [보스명]컷/멍/예상  [할말] : 보스시간 입력 후 빈칸 두번!! 메모 가능\n- [보스명]컷/멍/예상/삭제 명령어는 초성으로 입력가능합니다.\n  ex)' + bossData[0][0] + '컷 => ' + convertToInitialLetters(bossData[0][0] +'컷') + ', ' + bossData[0][0] + ' 컷 => ' + convertToInitialLetters(bossData[0][0] +' 컷') + '```'
+					value= '```- [보스명]컷/멍/예상  [할말] : 보스시간 입력 후 빈칸 두번!! 메모 가능\n- [보스명]컷 명령어는 초성으로 입력가능합니다.\n  ex)' + bossData[0][0] + '컷 => ' + convertToInitialLetters(bossData[0][0] +'컷') + ', ' + bossData[0][0] + ' 컷 => ' + convertToInitialLetters(bossData[0][0] +' 컷') + '```'
 					)
 			await ctx.send( embed=embed, tts=False)
 		else:
@@ -1489,6 +1484,10 @@ class mainCog(commands.Cog):
 					title = "----- 설정내용 -----",
 					description= f'```{setting_val}```',
 					color=0xff00ff
+					)
+			embed.add_field(
+					name="----- Special Thanks to. -----",
+					value= '```총무, 옹님, 공부중, 꽃신, 별빛, 크마, D.H.Kim, K.H.Sim, 쿠쿠, 오브로드, D.H.Oh, Bit, 팥빵, 천려, 이파리, 도미, 일깡, B.Park```'
 					)
 			await ctx.send(embed=embed, tts=False)
 		else:
@@ -1768,7 +1767,7 @@ class mainCog(commands.Cog):
 				if voice_client.is_playing():
 					voice_client.stop()
 				await voice_client.disconnect(force=True)
-			print("보탐봇 강제 재시작!")
+			print("보탐봇강제재시작!")
 			await asyncio.sleep(2)
 
 			inidata_restart = repo_restart.get_contents("restart.txt")
@@ -1885,10 +1884,10 @@ class mainCog(commands.Cog):
 				num_cong = int(ladder[0])  # 뽑을 인원
 				del(ladder[0])
 			except ValueError:
-				return await ctx.send(f'```뽑을 인원은 숫자로 입력바랍니다.\nex)사다리 1 아이디1 아이디2 아이디3 ...```')
+				return await ctx.send(f'```뽑을 인원은 숫자로 입력바랍니다\nex)!사다리 1 가 나 다 ...```')
 
 			if num_cong >= len(ladder):
-				return await ctx.send(f'```추첨인원이 총 인원과 같거나 많습니다. 재입력 해주세요!```')
+				return await ctx.send(f'```추첨인원이 총 인원과 같거나 많습니다. 재입력 해주세요```')
 			
 			if len(ladder) > 20:
 				await LadderFunc(num_cong, ladder, ctx)
@@ -2176,14 +2175,14 @@ class mainCog(commands.Cog):
 				if bossMungFlag[i] != True :
 					aa.append(bossData[i][0])		                 #output_bossData[0] : 보스명
 					aa.append(bossTime[i])                           #output_bossData[1] : 시간
-					aa.append(bossTime[i].strftime('%H:%M'))      #output_bossData[2] : 시간(00:00:00)
+					aa.append(bossTime[i].strftime('%H:%M:%S'))      #output_bossData[2] : 시간(00:00:00)
 					ouput_bossData.append(aa)
 				aa = []
 
 			for i in range(fixed_bossNum):
 				aa.append(fixed_bossData[i][0])                      #output_bossData[0] : 보스명
 				aa.append(fixed_bossTime[i])                         #output_bossData[1] : 시간
-				aa.append(fixed_bossTime[i].strftime('%H:%M'))    #output_bossData[2] : 시간(00:00:00)
+				aa.append(fixed_bossTime[i].strftime('%H:%M:%S'))    #output_bossData[2] : 시간(00:00:00)
 				ouput_bossData.append(aa)
 				aa = []
 
@@ -2240,7 +2239,7 @@ class mainCog(commands.Cog):
 			try:
 				await MakeSound(ctx.message.author.display_name +'님이, ' + sayMessage, './sound/say')
 			except:
-				await ctx.send( f"```음성파일 생성에 실패하였습니다.(amazon polly 사용시 키 값을 확인하세요!)```")
+				await ctx.send( f"```음성파일 생성에 실패하였습니다.!(amazon polly 사용시 키 값을 확인하세요!)```")
 				return
 			await ctx.send("```< " + ctx.author.display_name + " >님이 \"" + sayMessage + "\"```", tts=False)
 			try:
@@ -2249,7 +2248,7 @@ class mainCog(commands.Cog):
 				else:
 					await PlaySound(ctx.voice_client, './sound/say.wav')
 			except:
-				await ctx.send( f"```음성파일 재생에 실패하였습니다. 접속에 문제가 있거나 음성채널에 접속 되지 않은 상태입니다!```")
+				await ctx.send( f"```음성파일 재생에 실패하였습니다. 접속에 문제가 있거나 음성채널에 접속 되지 않은 상태입니다.!```")
 				return
 		else:  
 			return
@@ -2363,32 +2362,32 @@ class mainCog(commands.Cog):
 
 						tmp_time_delta = (tmp_bossTime[i].date() - (datetime.datetime.now() + datetime.timedelta(hours=int(basicSetting[0]))).date()).days
 						if tmp_time_delta == 0:
-							aa.append(tmp_bossTime[i].strftime('%H:%M'))
+							aa.append(tmp_bossTime[i].strftime('%H:%M:%S'))
 						else:
 							if tmp_time_delta > 0:
-								aa.append(f"(+{tmp_time_delta}d) {tmp_bossTime[i].strftime('%H:%M')}")
+								aa.append(f"(+{tmp_time_delta}d) {tmp_bossTime[i].strftime('%H:%M:%S')}")
 							else:
-								aa.append(f"({tmp_time_delta}d) {tmp_bossTime[i].strftime('%H:%M')}")
+								aa.append(f"({tmp_time_delta}d) {tmp_bossTime[i].strftime('%H:%M:%S')}")
 
 						tmp_time_delta = 0
 
-						# aa.append(tmp_bossTime[i].strftime('%H:%M'))  #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(tmp_bossTime[i].strftime('%H:%M'))  
+						# aa.append(tmp_bossTime[i].strftime('%H:%M:%S'))  #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(tmp_bossTime[i].strftime('%H:%M'))  
 						aa.append('-')	                                 #output_bossData[3] : -
 					else :
 						aa.append(bossTime[i])                           #output_bossData[1] : 시간
 
 						tmp_time_delta = (tmp_bossTime[i].date() - (datetime.datetime.now() + datetime.timedelta(hours=int(basicSetting[0]))).date()).days
 						if tmp_time_delta == 0:
-							aa.append(tmp_bossTime[i].strftime('%H:%M'))
+							aa.append(tmp_bossTime[i].strftime('%H:%M:%S'))
 						else:
 							if tmp_time_delta > 0:
-								aa.append(f"(+{tmp_time_delta}d) {tmp_bossTime[i].strftime('%H:%M')}")
+								aa.append(f"(+{tmp_time_delta}d) {tmp_bossTime[i].strftime('%H:%M:%S')}")
 							else:
-								aa.append(f"({tmp_time_delta}d) {tmp_bossTime[i].strftime('%H:%M')}")
+								aa.append(f"({tmp_time_delta}d) {tmp_bossTime[i].strftime('%H:%M:%S')}")
 
 						tmp_time_delta = 0
 
-						aa.append(bossTime[i].strftime('%H:%M'))      #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(bossTime[i].strftime('%H:%M'))  
+						# aa.append(bossTime[i].strftime('%H:%M:%S'))      #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(bossTime[i].strftime('%H:%M'))  
 						aa.append('+')	                                 #output_bossData[3] : +
 					aa.append(bossData[i][2])                            #output_bossData[4] : 멍/미입력 보스
 					aa.append(bossMungCnt[i])	                         #output_bossData[5] : 멍/미입력횟수
@@ -2399,7 +2398,7 @@ class mainCog(commands.Cog):
 			for i in range(fixed_bossNum):
 				aa.append(fixed_bossData[i][0])                      #output_bossData[0] : 보스명
 				aa.append(fixed_bossTime[i])                         #output_bossData[1] : 시간
-				aa.append(fixed_bossTime[i].strftime('%H:%M'))    #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(fixed_bossTime[i].strftime('%H:%M'))
+				aa.append(fixed_bossTime[i].strftime('%H:%M:%S'))    #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(fixed_bossTime[i].strftime('%H:%M'))
 				aa.append('@')                                       #output_bossData[3] : @
 				aa.append(0)                                         #output_bossData[4] : 멍/미입력 보스
 				aa.append(0)                                         #output_bossData[5] : 멍/미입력횟수
@@ -2547,21 +2546,21 @@ class mainCog(commands.Cog):
 						aa.append(tmp_bossTime[i])                       #output_bossData[1] : 시간
 
 						if (datetime.datetime.now() + datetime.timedelta(hours=int(basicSetting[0]))).strftime('%Y-%m-%d') == tmp_bossTime[i].strftime('%Y-%m-%d'):
-							aa.append(tmp_bossTime[i].strftime('%H:%M'))
+							aa.append(tmp_bossTime[i].strftime('%H:%M:%S'))
 						else:
-							aa.append(f"[{tmp_bossTime[i].strftime('%Y-%m-%d')}] {tmp_bossTime[i].strftime('%H:%M')}")
+							aa.append(f"[{tmp_bossTime[i].strftime('%Y-%m-%d')}] {tmp_bossTime[i].strftime('%H:%M:%S')}")
 
-						# aa.append(tmp_bossTime[i].strftime('%H:%M'))  #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(tmp_bossTime[i].strftime('%H:%M'))
+						# aa.append(tmp_bossTime[i].strftime('%H:%M:%S'))  #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(tmp_bossTime[i].strftime('%H:%M'))
 						aa.append('-')	                                 #output_bossData[3] : -
 					else :
 						aa.append(bossTime[i])                           #output_bossData[1] : 시간
 
 						if (datetime.datetime.now() + datetime.timedelta(hours=int(basicSetting[0]))).strftime('%Y-%m-%d') == bossTime[i].strftime('%Y-%m-%d'):
-							aa.append(bossTime[i].strftime('%H:%M'))
+							aa.append(bossTime[i].strftime('%H:%M:%S'))
 						else:
-							aa.append(f"[{bossTime[i].strftime('%Y-%m-%d')}] {bossTime[i].strftime('%H:%M')}")
+							aa.append(f"[{bossTime[i].strftime('%Y-%m-%d')}] {bossTime[i].strftime('%H:%M:%S')}")
 							
-						# aa.append(bossTime[i].strftime('%H:%M'))      #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(bossTime[i].strftime('%H:%M'))
+						# aa.append(bossTime[i].strftime('%H:%M:%S'))      #output_bossData[2] : 시간(00:00:00) -> 초빼기 : aa.append(bossTime[i].strftime('%H:%M'))
 						aa.append('+')	                                 #output_bossData[3] : +
 					aa.append(bossData[i][2])                            #output_bossData[4] : 멍/미입력 보스
 					aa.append(bossMungCnt[i])	                         #output_bossData[5] : 멍/미입력횟수
@@ -2585,9 +2584,9 @@ class mainCog(commands.Cog):
 				for i in range(fixed_bossNum):
 					if timestring1 == fixed_bossTime[i]:
 						if (datetime.datetime.now() + datetime.timedelta(hours=int(basicSetting[0]))).strftime('%Y-%m-%d') == fixed_bossTime[i].strftime('%Y-%m-%d'):
-							tmp_timeSTR = fixed_bossTime[i].strftime('%H:%M') #초빼기 : tmp_timeSTR = fixed_bossTime[i].strftime('%H:%M')
+							tmp_timeSTR = fixed_bossTime[i].strftime('%H:%M:%S') #초빼기 : tmp_timeSTR = fixed_bossTime[i].strftime('%H:%M')
 						else:
-							tmp_timeSTR = '[' + fixed_bossTime[i].strftime('%Y-%m-%d') + '] ' + fixed_bossTime[i].strftime('%H:%M') #초빼기 : tmp_timeSTR = '[' + fixed_bossTime[i].strftime('%Y-%m-%d') + '] ' + fixed_bossTime[i].strftime('%H:%M')
+							tmp_timeSTR = '[' + fixed_bossTime[i].strftime('%Y-%m-%d') + '] ' + fixed_bossTime[i].strftime('%H:%M:%S') #초빼기 : tmp_timeSTR = '[' + fixed_bossTime[i].strftime('%Y-%m-%d') + '] ' + fixed_bossTime[i].strftime('%H:%M')
 						fixedboss_information[cntF] = fixedboss_information[cntF] + tmp_timeSTR + ' : ' + fixed_bossData[i][0] + '\n'
 
 			boss_information = []
@@ -2835,7 +2834,7 @@ class mainCog(commands.Cog):
 			race_val = []
 			random_pos = []
 			racing_result = []
-			output = ':camera: :camera: :camera: 신나는 마법인형 레이스! :camera: :camera: :camera:\n'
+			output = ':camera: :camera: :camera: 신나는 레이싱! :camera: :camera: :camera:\n'
 			#racing_unit = [':giraffe:', ':elephant:', ':tiger2:', ':hippopotamus:', ':crocodile:',':leopard:',':ox:', ':sheep:', ':pig2:',':dromedary_camel:',':dragon:',':rabbit2:'] #동물스킨
 			#racing_unit = [':red_car:', ':taxi:', ':bus:', ':trolleybus:', ':race_car:', ':police_car:', ':ambulance:', ':fire_engine:', ':minibus:', ':truck:', ':articulated_lorry:', ':tractor:', ':scooter:', ':manual_wheelchair:', ':motor_scooter:', ':auto_rickshaw:', ':blue_car:', ':bike:', ':helicopter:', ':steam_locomotive:']  #탈것스킨
 			#random.shuffle(racing_unit) 
@@ -2907,9 +2906,9 @@ class mainCog(commands.Cog):
 
 				for j in range(len(random_pos[0])):
 					if j%2 == 0:
-						output =  ':camera: :camera_with_flash: :camera: 신나는 마법인형 레이스! :camera_with_flash: :camera: :camera_with_flash:\n'
+						output =  ':camera: :camera_with_flash: :camera: 신나는 레이싱! :camera_with_flash: :camera: :camera_with_flash:\n'
 					else :
-						output =  ':camera_with_flash: :camera: :camera_with_flash: 신나는 마법인형 레이스! :camera: :camera_with_flash: :camera:\n'
+						output =  ':camera_with_flash: :camera: :camera_with_flash: 신나는 레이싱! :camera: :camera_with_flash: :camera:\n'
 					str_racing_field = []
 					for i in range(len(racing_member)):
 						temp_pos = cur_pos[i]
@@ -3338,15 +3337,15 @@ class mainCog(commands.Cog):
 			await ctx.send(embed = embed)
 
 			try:
-				await ctx.send(f"```떠나고 싶은 서버의 [숫자]를 입력하여 선택해 주세요.```")
+				await ctx.send(f"```떠나고 싶은 서버의 [숫자]를 입력하여 선택해 주세요```")
 				message_result : discord.Message = await self.bot.wait_for("message", timeout = 10, check=(lambda message: message.channel == ctx.message.channel and message.author == ctx.message.author))
 			except asyncio.TimeoutError:
-				return await ctx.send(f"```서버 선택 시간이 초과됐습니다! 필요시 명령어를 재입력해 주세요.```")
+				return await ctx.send(f"```서버 선택 시간이 초과됐습니다! 필요시 명령어를 재입력해 주세요```")
 				
 			try:
 				guild_name = self.bot.guilds[int(message_result.content)-1].name
 				await self.bot.get_guild(self.bot.guilds[int(message_result.content)-1].id).leave()
-				return await ctx.send(f"```[{guild_name}] 서버에서 떠났습니다!```")
+				return await ctx.send(f"```[{guild_name}] 서버에서 떠났습니다.!```")
 			except ValueError:
 				return			
 
@@ -3358,7 +3357,7 @@ class mainCog(commands.Cog):
 
 		if ctx.message.channel.id == basicSetting[7] or ctx.message.channel.id == basicSetting[20]:
 			if not args:
-				return await ctx.send(f"**{command[35][0]} [판매금액] (거래소세금)** 양식으로 입력 해주세요.\n※ 거래소세금은 미입력시 5%입니다.")
+				return await ctx.send(f"**{command[35][0]} [판매금액] (거래소세금)** 양식으로 입력 해주세요\n※ 거래소세금은 미입력시 5%입니다.")
 			
 			input_money_data : list = args.split()
 			len_input_money_data = len(input_money_data)
@@ -3370,7 +3369,7 @@ class mainCog(commands.Cog):
 				return await ctx.send(f"**[판매금액] (거래소세금)**은 숫자로 입력 해주세요.")
 
 			if len_input_money_data < 1 or len_input_money_data > 3:
-				return await ctx.send(f"**{command[35][0]} [판매금액] (거래소세금)** 양식으로 입력 해주세요.\n※ 거래소세금은 미입력시 5%입니다.")
+				return await ctx.send(f"**{command[35][0]} [판매금액] (거래소세금)** 양식으로 입력 해주세요\n※ 거래소세금은 미입력시 5%입니다.")
 			elif len_input_money_data == 2:
 				tax = input_money_data[1]
 			else:
@@ -3400,7 +3399,7 @@ class mainCog(commands.Cog):
 
 		if ctx.message.channel.id == basicSetting[7] or ctx.message.channel.id == basicSetting[20]:
 			if not args:
-				return await ctx.send(f"**{command[36][0]} [거래소가격] [실거래가] (거래소세금)** 양식으로 입력 해주세요.\n※ 거래소세금은 미입력시 5%입니다.")
+				return await ctx.send(f"**{command[36][0]} [거래소가격] [실거래가] (거래소세금)** 양식으로 입력 해주세요\n※ 거래소세금은 미입력시 5%입니다.")
 			
 			input_money_data : list = args.split()
 			len_input_money_data = len(input_money_data)
@@ -3412,7 +3411,7 @@ class mainCog(commands.Cog):
 				return await ctx.send(f"**[판매금액] (거래소세금)**은 숫자로 입력 해주세요.")
 
 			if len_input_money_data < 2 or len_input_money_data > 4:
-				return await ctx.send(f"**{command[36][0]} [거래소가격] [실거래가] (거래소세금)** 양식으로 입력 해주세요.\n※ 거래소세금은 미입력시 5%입니다.")
+				return await ctx.send(f"**{command[36][0]} [거래소가격] [실거래가] (거래소세금)** 양식으로 입력 해주세요\n※ 거래소세금은 미입력시 5%입니다.")
 			elif len_input_money_data == 3:
 				tax = input_money_data[2]
 			else:
@@ -3425,7 +3424,7 @@ class mainCog(commands.Cog):
 			reault_payback1= price_reg_tax - input_money_data[1]
 
 			embed = discord.Embed(
-					title = f"🧮  페이백 계산결과[혈맹지원] (세율 {tax}% 기준) ",
+					title = f"🧮  페이백 계산결과1 (세율 {tax}% 기준) ",
 					description = f"**```fix\n{reault_payback}```**",
 					color=0x00ff00
 					)
@@ -3434,7 +3433,7 @@ class mainCog(commands.Cog):
 			await ctx.send(embed = embed)
 
 			embed2 = discord.Embed(
-					title = f"🧮  페이백 계산결과[본인부담] (세율 {tax}% 기준) ",
+					title = f"🧮  페이백 계산결과2 (세율 {tax}% 기준) ",
 					description = f"**```fix\n{reault_payback1}```**",
 					color=0x00ff00
 					)
@@ -3444,7 +3443,6 @@ class mainCog(commands.Cog):
 		else:
 			return
 
-	################ 가위바위보 ################ 
 	@commands.command(name=command[37][0], aliases=command[37][1:])
 	async def command_rock_paper_scissors_game(self, ctx : commands.Context):
 		if basicSetting[19] != "" and ctx.message.channel.id == basicSetting[7]:
@@ -3453,7 +3451,7 @@ class mainCog(commands.Cog):
 		if ctx.message.channel.id != basicSetting[7] and ctx.message.channel.id != basicSetting[19]:
 			return
 
-		message_rock_paper_scissors : discord.message.Message = await ctx.send("안내면 진거 가위바위보")
+		message_rock_paper_scissors : discord.message.Message = await ctx.send("안내면 진거 가위바위..")
 		reaction_emoji : list = ["✌️", "✊", "✋"]
 
 		for emoji in reaction_emoji:
@@ -3513,9 +3511,9 @@ class mainCog(commands.Cog):
 				pass
 			if self.bot.voice_clients[0].is_connected() :
 				print("보이스 사용 설정 완료!")
-				return await ctx.send(f"```보이스를 사용하도록 설정하였습니다.```")
+				return await ctx.send(f"```보이스를 사용하도록 설정하였습니다.!```")
 
-		return await ctx.send(f"```보이스 사용 설정이 완료 되었습니다!\n< 음성채널 접속 후 [{command[5][0]}] 명령을 사용 하세요. >```")
+		return await ctx.send(f"```보이스 사용 설정이 완료 되었습니다!\n< 음성채널 접속 후 [{command[5][0]}] 명령을 사용 하세요 >```")
 
 	################ 보이스미사용 ################ 
 	@commands.command(name=command[39][0], aliases=command[39][1:])
@@ -3543,7 +3541,7 @@ class mainCog(commands.Cog):
 		
 		contents = repo.get_contents("test_setting.ini")
 		repo.update_file(contents.path, "test_setting", result_voice_use, contents.sha)
-		return await ctx.send(f"```보이스를 사용하지 않도록 설정하였습니다.```")
+		return await ctx.send(f"```보이스를 사용하지 않도록 설정하였습니다.!```")
 
 	################ 럭키박스 ################ 
 	@commands.command(name=command[41][0], aliases=command[41][1:])
@@ -3555,7 +3553,7 @@ class mainCog(commands.Cog):
 			return
 
 		if not args:
-			return await ctx.send(f'```명령어 [추첨인원] (대기시간/초) *(메모) 형태로 입력해주시기 바랍니다.```')
+			return await ctx.send(f'```명령어 [추첨인원] (대기시간/초) *(메모) 형태로 입력해주시기 바랍나다.```')
 
 		memo_data : str = ""
 		waiting_time : int = 30
@@ -3569,18 +3567,18 @@ class mainCog(commands.Cog):
 		try:
 			num_cong = int(input_game_data[0])  # 뽑을 인원
 			if num_cong <= 0:
-				return await ctx.send(f'```추첨인원이 0보다 작거나 같습니다. 재입력 해주세요.```')
+				return await ctx.send(f'```추첨인원이 0보다 작거나 같습니다. 재입력 해주세요```')
 		except ValueError:
-			return await ctx.send('```추첨인원은 숫자로 입력 바랍니다.\nex)럭키박스 1```')
+			return await ctx.send('```추첨인원은 숫자로 입력 바랍니다\nex)!럭키박스 1```')
 
 		if len(input_game_data) >= 2:
 			waiting_time : int = 30
 			try:
 				waiting_time = int(input_game_data[1])  # 대기시간
 				if waiting_time <= 0 :
-					return await ctx.send(f'```대기시간이 0보다 작거나 같습니다. 재입력 해주세요.```')
+					return await ctx.send(f'```대기시간이 0보다 작거나 같습니다. 재입력 해주세요```')
 			except ValueError:
-				return await ctx.send(f'```대기시간(초)는 숫자로 입력 바랍니다.\nex)럭키박스 1 60```')
+				return await ctx.send(f'```대기시간(초)는 숫자로 입력 바랍니다\nex)!럭키박스 1 60```')
 
 		reaction_emoji : list = ["✅", "❌"]
 
@@ -3608,20 +3606,20 @@ class mainCog(commands.Cog):
 						embed.title = f"😫 럭키박스! 취소! 😱"
 						embed.description = ""
 						await game_message.edit(embed=embed)	
-						return await ctx.send(f"```게임이 취소되었습니다.```")
+						return await ctx.send(f"```게임이 취소되었습니다.!```")
 			await asyncio.sleep(1)
 
 		if cache_msg.reactions[0].count == 1:
 			embed.title = f"😫 럭키박스! 추첨 실패! 😱"
 			embed.description = ""
 			await game_message.edit(embed=embed)
-			return await ctx.send(f"```참여자가 없어 게임이 취소되었습니다.```")
+			return await ctx.send(f"```참여자가 없어 게임이 취소되었습니다.!```")
 
 		if num_cong >= cache_msg.reactions[0].count-1:
 			embed.title = f"😫 럭키박스! 추첨 실패! 😱"
 			embed.description = ""
 			await game_message.edit(embed=embed)		
-			return await ctx.send(f'```추첨인원이 참여인원과 같거나 많습니다. 재입력 해주세요.```')
+			return await ctx.send(f'```추첨인원이 참여인원과 같거나 많습니다. 재입력 해주세요```')
 
 		participant_users = await cache_msg.reactions[0].users().flatten()
 
@@ -3775,7 +3773,7 @@ class IlsangDistributionBot(commands.AutoShardedBot):
 
 		# 디스코드에는 현재 본인이 어떤 게임을 플레이하는지 보여주는 기능이 있습니다.
 		# 이 기능을 사용하여 봇의 상태를 간단하게 출력해줄 수 있습니다.
-		await self.change_presence(status=discord.Status.online, activity=discord.Game(name="<메뉴 명령어 도움말>", type=1), afk=False)
+		await self.change_presence(status=discord.Status.online, activity=discord.Game(name=command[1][0], type=1), afk=False)
 
 	async def on_message(self, msg):
 		await self.wait_until_ready()
@@ -3912,7 +3910,7 @@ class IlsangDistributionBot(commands.AutoShardedBot):
 
 					################ 보스 멍 처리 ################ 
 
-					if message.content.startswith(bossData[i][0] +'멍') or message.content.startswith(convertToInitialLetters(bossData[i][0] +'멍')) or message.content.startswith(bossData[i][0] +' 멍') or message.content.startswith(convertToInitialLetters(bossData[i][0] +' 멍')):
+					if message.content.startswith(bossData[i][0] +'멍') or message.content.startswith(bossData[i][0] +' 멍'):
 						if hello.find('  ') != -1 :
 							bossData[i][6] = hello[hello.find('  ')+2:]
 							hello = hello[:hello.find('  ')]
@@ -3993,7 +3991,7 @@ class IlsangDistributionBot(commands.AutoShardedBot):
 						
 				################ 예상 보스 타임 입력 ################ 
 
-					if message.content.startswith(bossData[i][0] +'예상') or message.content.startswith(convertToInitialLetters(bossData[i][0] +'예상')) or message.content.startswith(bossData[i][0] +' 예상') or message.content.startswith(convertToInitialLetters(bossData[i][0] +' 예상')):
+					if message.content.startswith(bossData[i][0] +'예상')  or message.content.startswith(bossData[i][0] +' 예상'):
 						if hello.find('  ') != -1 :
 							bossData[i][6] = hello[hello.find('  ')+2:]
 							hello = hello[:hello.find('  ')]
@@ -4044,7 +4042,7 @@ class IlsangDistributionBot(commands.AutoShardedBot):
 							
 					################ 보스타임 삭제 ################
 						
-					if message.content == bossData[i][0] +'삭제' or message.content.startswith(convertToInitialLetters(bossData[i][0] +'삭제')) or message.content.startswith(bossData[i][0] +' 삭제') or message.content.startswith(convertToInitialLetters(bossData[i][0] +' 삭제')):
+					if message.content == bossData[i][0] +'삭제' or message.content == bossData[i][0] +' 삭제':
 						bossTime[i] = datetime.datetime.now()+datetime.timedelta(days=365, hours = int(basicSetting[0]))
 						tmp_bossTime[i] =  datetime.datetime.now()+datetime.timedelta(days=365, hours = int(basicSetting[0]))
 						bossTimeString[i] = '99:99:99'
@@ -4061,7 +4059,7 @@ class IlsangDistributionBot(commands.AutoShardedBot):
 					
 					################ 보스별 메모 ################ 
 
-					if message.content.startswith(bossData[i][0] +'메모 ') or message.content.startswith(convertToInitialLetters(bossData[i][0] +'메모 ')) or message.content.startswith(bossData[i][0] +' 메모 ') or message.content.startswith(convertToInitialLetters(bossData[i][0] +' 메모 ')):
+					if message.content.startswith(bossData[i][0] +'메모 '):
 						
 						tmp_msg = bossData[i][0] +'메모 '
 						
@@ -4088,7 +4086,7 @@ class IlsangDistributionBot(commands.AutoShardedBot):
 
 	async def close(self):
 		await super().close()
-		print("보탐봇 종료 완료.")
+		print("일상디코봇 종료 완료.")
 
 ilsang_distribution_bot : IlsangDistributionBot = IlsangDistributionBot()
 ilsang_distribution_bot.add_cog(mainCog(ilsang_distribution_bot))
