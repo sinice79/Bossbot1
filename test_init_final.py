@@ -1414,8 +1414,8 @@ class mainCog(commands.Cog):
 			command_list += ','.join(command[13]) + ' [아이디]\n'     #!정산
 			command_list += ','.join(command[14]) + ' 또는 ' + ','.join(command[14]) + ' 0000, 00:00\n'     #!보스일괄
 			command_list += ','.join(command[40]) + ' 또는 ' + ','.join(command[40]) + ' 0000, 00:00\n'     #!멍일괄
-			command_list += ','.join(command[43]) + f' [00:00 : 보스명(엔터) ...]\n※ 보스탐 결과 복붙 가능\nex){command[43][0]} + 12:30 : {bossData[0][0]}\n+ 13:30 : {bossData[1][0]}\n+ (+1d) 14:30 : {bossData[2][0]}...\n'     #!컷등록
-			command_list += ','.join(command[44]) + f' [00:00 : 보스명(엔터) ...]\n※ [00:00 보스명] 형태로 여러줄(엔터)로 구분하여 등록\nex){command[44][0]} + 12:30 : {bossData[0][0]}\n13:30 : {bossData[1][0]}\n+ (+1d) 00:30 : {bossData[2][0]}...\n'     #!예상등록
+			command_list += ','.join(command[43]) + f' [00:00:00 : 보스명(엔터) ...]\n※ 보스탐 결과 복붙 가능\nex){command[43][0]} + 12:34:00 : {bossData[0][0]}\n+ 10:56:00 : {bossData[1][0]}\n+ (+1d) 12:12:00 : {bossData[2][0]}...\n'     #!컷등록
+			command_list += ','.join(command[44]) + f' [00:00:00 : 보스명(엔터) ...]\n※ [00:00:00 보스명] 형태로 여러줄(엔터)로 구분하여 등록\nex){command[44][0]} + 12:34:00 : {bossData[0][0]}\n10:56:00 : {bossData[1][0]}\n+ (+1d) 12:12:00 : {bossData[2][0]}...\n'     #!예상등록
 			command_list += ','.join(command[45]) + ' [시간(00:00)] [추가시간(숫자)] [보스명1] [보스명2] [보스명3] ...\n'     #!추가등록
 			command_list += ','.join(command[15]) + '\n'     #!q
 			command_list += ','.join(command[16]) + ' [할말]\n'     #!v
@@ -3672,24 +3672,28 @@ class mainCog(commands.Cog):
 			tmp_boss_name = boss_data[boss_data.rfind(": ")+1:].strip()
 			tmp_boss_time = boss_data[:boss_data.rfind(" : ")].strip()
 			try:
-				tmp_hour = int(tmp_boss_time[tmp_boss_time.find(":")-2:tmp_boss_time.find(":")])
-				tmp_minute = int(tmp_boss_time[tmp_boss_time.rfind(":")+1:])
-				
-				if tmp_hour > 23 or tmp_hour < 0 or tmp_minute > 60:
-					return await ctx.send(f"**[{tmp_boss_name}]**의 올바른 시간(00:00 ~ 23:59)을 입력해주세요.")
-			except e:
-				print(e)
-				return await ctx.send(f"**[{tmp_boss_name}]**의 올바른 시간(00:00 ~ 23:59)을 입력해주세요. ")
+				if list(tmp_boss_time).count(":") > 1:
+					tmp_hour = int(tmp_boss_time[tmp_boss_time.find(":")-2:tmp_boss_time.find(":")])
+					tmp_minute = int(tmp_boss_time[tmp_boss_time.find(":")+1:tmp_boss_time.rfind(":")])
+					tmp_second = int(tmp_boss_time[tmp_boss_time.rfind(":")+1:])
+				else:
+					tmp_hour = int(tmp_boss_time[tmp_boss_time.find(":")-2:tmp_boss_time.find(":")])
+					tmp_minute = int(tmp_boss_time[tmp_boss_time.rfind(":")+1:])
+					tmp_second = 0
+				if tmp_hour > 23 or tmp_hour < 0 or tmp_minute > 60 or tmp_second > 60:
+					return await ctx.send(f"**[{tmp_boss_name}]**의 올바른 시간(00:00:00 ~ 23:59:59)을 입력해주세요.")
+			except:
+				return await ctx.send(f"**[{tmp_boss_name}]**의 올바른 시간(00:00:00 ~ 23:59:59)을 입력해주세요. ")
 
 			if "@" != boss_data[0]:
-				boss_data_dict[tmp_boss_name] = {"hour" : tmp_hour, "minute" : tmp_minute}
+				boss_data_dict[tmp_boss_name] = {"hour" : tmp_hour, "minute" : tmp_minute, "second" : tmp_second}
 
 		for i in range(bossNum):
 			if bossData[i][0] in boss_data_dict:
 				curr_now = datetime.datetime.now()
 				now2 = datetime.datetime.now()
 				tmp_now = datetime.datetime.now()
-				tmp_now = tmp_now.replace(hour=int(boss_data_dict[bossData[i][0]]["hour"]), minute=int(boss_data_dict[bossData[i][0]]["minute"]))
+				tmp_now = tmp_now.replace(hour=int(boss_data_dict[bossData[i][0]]["hour"]), minute=int(boss_data_dict[bossData[i][0]]["minute"]), second=int(boss_data_dict[bossData[i][0]]["second"]))
 					
 				bossFlag[i] = False
 				bossFlag0[i] = False
@@ -3735,22 +3739,27 @@ class mainCog(commands.Cog):
 			tmp_boss_name = boss_data[boss_data.rfind(": ")+1:].strip()
 			tmp_boss_time = boss_data[:boss_data.rfind(" : ")].strip()
 			try:
-				tmp_hour = int(tmp_boss_time[tmp_boss_time.find(":")-2:tmp_boss_time.find(":")])
-				tmp_minute = int(tmp_boss_time[tmp_boss_time.rfind(":")+1:])
-				
-				if tmp_hour > 23 or tmp_hour < 0 or tmp_minute > 60:
-					return await ctx.send(f"**[{tmp_boss_name}]**의 올바른 시간(00:00 ~ 23:59)을 입력해주세요. ")
+				if list(tmp_boss_time).count(":") > 1:
+					tmp_hour = int(tmp_boss_time[tmp_boss_time.find(":")-2:tmp_boss_time.find(":")])
+					tmp_minute = int(tmp_boss_time[tmp_boss_time.find(":")+1:tmp_boss_time.rfind(":")])
+					tmp_second = int(tmp_boss_time[tmp_boss_time.rfind(":")+1:])
+				else:
+					tmp_hour = int(tmp_boss_time[tmp_boss_time.find(":")-2:tmp_boss_time.find(":")])
+					tmp_minute = int(tmp_boss_time[tmp_boss_time.rfind(":")+1:])
+					tmp_second = 0
+				if tmp_hour > 23 or tmp_hour < 0 or tmp_minute > 60 or tmp_second > 60:
+					return await ctx.send(f"**[{tmp_boss_name}]**의 올바른 시간(00:00:00 ~ 23:59:59)을 입력해주세요. ")
 			except:
-				return await ctx.send(f"**[{tmp_boss_name}]**의 올바른 시간(00:00 ~ 23:59)을 입력해주세요. ")
+				return await ctx.send(f"**[{tmp_boss_name}]**의 올바른 시간(00:00:00 ~ 23:59:59)을 입력해주세요. ")
 
 			if "@" != boss_data[0]:
-				boss_data_dict[tmp_boss_name] = {"hour" : tmp_hour, "minute" : tmp_minute}
+				boss_data_dict[tmp_boss_name] = {"hour" : tmp_hour, "minute" : tmp_minute, "second" : tmp_second}
 
 		for i in range(bossNum):
 			if bossData[i][0] in boss_data_dict:
 				now2 = datetime.datetime.now()
 				tmp_now = datetime.datetime.now()
-				tmp_now = tmp_now.replace(hour=int(boss_data_dict[bossData[i][0]]["hour"]), minute=int(boss_data_dict[bossData[i][0]]["minute"]))
+				tmp_now = tmp_now.replace(hour=int(boss_data_dict[bossData[i][0]]["hour"]), minute=int(boss_data_dict[bossData[i][0]]["minute"]), second=int(boss_data_dict[bossData[i][0]]["second"]))
 					
 				bossFlag[i] = False
 				bossFlag0[i] = False
