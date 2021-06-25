@@ -1405,7 +1405,7 @@ class mainCog(commands.Cog):
 			command_list += ','.join(command[11]) + ' [인원] [금액]\n'     #!분배
 			command_list += ','.join(command[12]) + ' [뽑을인원수] [아이디1] [아이디2]...\n'     #!사다리
 			command_list += ','.join(command[27]) + ' [아이디1] [아이디2]...(최대 12명)\n'     #!경주
-			command_list += ','.join(command[41]) + ' [추첨인원] (대기시간/초) *(메모)\n'    #!럭키박스
+			command_list += ','.join(command[41]) + ' [추첨인원] (대기시간/초) /(메모)\n'    #!럭키박스
 			command_list += ','.join(command[37]) + '\n'     #!가바보
 			command_list += ','.join(command[38]) + '\n'     #!보이스사용
 			command_list += ','.join(command[39]) + '\n'     #!보이스미사용
@@ -3558,16 +3558,16 @@ class mainCog(commands.Cog):
 			return
 
 		if not args:
-			return await ctx.send(f'```명령어 [추첨인원] (대기시간/초) *(메모) 형태로 입력해주시기 바랍니다.```')
+			return await ctx.send(f'```명령어 [추첨인원] (대기시간/초) /(메모) 형태로 입력해주시기 바랍니다.```')
 
 		memo_data : str = ""
 		waiting_time : int = 30
 
-		if args.find("*") == -1:
+		if args.find("/") == -1:
 			input_game_data = args.split()
 		else:
-			input_game_data = args[:args.find("*")-1].split()
-			memo_data = args[args.find("*")+1:]
+			input_game_data = args[:args.find("/")-1].split()
+			memo_data = args[args.find("/")+1:]
 
 		try:
 			num_cong = int(input_game_data[0])  # 뽑을 인원
@@ -3809,6 +3809,7 @@ class mainCog(commands.Cog):
 
 		for i in range(bossNum):
 			if bossData[i][0] in boss_name_list:
+				curr_now = datetime.datetime.now()
 				now2 = datetime.datetime.now()
 				tmp_now = datetime.datetime.now()
 				tmp_now = tmp_now.replace(hour=int(input_hour), minute=int(input_minute), second=0) + datetime.timedelta(hours=int(input_delta_time))
@@ -3818,16 +3819,23 @@ class mainCog(commands.Cog):
 				bossMungFlag[i] = False
 				bossMungCnt[i] = 0
 
-				if tmp_now < now2 :
-					tmp_now = tmp_now + datetime.timedelta(days=int(1))
+				if tmp_now < now2 : 
+					deltaTime = datetime.timedelta(hours = int(bossData[i][1]), minutes = int(bossData[i][5]))
+					while now2 > tmp_now :
+						tmp_now = tmp_now + deltaTime
+						bossMungCnt[i] = bossMungCnt[i] + 1
+					now2 = tmp_now
+					bossMungCnt[i] = bossMungCnt[i] - 1
+				else :
+					now2 = tmp_now
 							
-				tmp_bossTime[i] = bossTime[i] = nextTime = tmp_now
+				tmp_bossTime[i] = bossTime[i] = nextTime = now2
 				tmp_bossTimeString[i] = bossTimeString[i] = nextTime.strftime('%H:%M:%S')
 				tmp_bossDateString[i] = bossDateString[i] = nextTime.strftime('%Y-%m-%d')
 
-				if  now2 + datetime.timedelta(minutes=int(basicSetting[1])) <= tmp_bossTime[i] < now2 + datetime.timedelta(minutes=int(basicSetting[3])):
+				if  curr_now + datetime.timedelta(minutes=int(basicSetting[1])) <= tmp_bossTime[i] < curr_now + datetime.timedelta(minutes=int(basicSetting[3])):
 					bossFlag0[i] = True
-				if tmp_bossTime[i] < now2 + datetime.timedelta(minutes=int(basicSetting[1])):
+				if tmp_bossTime[i] < curr_now + datetime.timedelta(minutes=int(basicSetting[1])):
 					bossFlag[i] = True
 					bossFlag0[i] = True
 					
