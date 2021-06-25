@@ -3666,10 +3666,12 @@ class mainCog(commands.Cog):
 
 		boss_data_list : list = args.split("\n")
 		boss_data_dict : dict = {}
-		
+		result_boss_name : list = []
 
 		for boss_data in boss_data_list:
 			tmp_boss_name = boss_data[boss_data.rfind(": ")+1:].strip()
+			if tmp_boss_name.find(" ") != -1:
+				tmp_boss_name = tmp_boss_name[:tmp_boss_name.find(" ")].strip()
 			tmp_boss_time = boss_data[:boss_data.rfind(" : ")].strip()
 			try:
 				if list(tmp_boss_time).count(":") > 1:
@@ -3721,7 +3723,9 @@ class mainCog(commands.Cog):
 				if tmp_bossTime[i] < curr_now + datetime.timedelta(minutes=int(basicSetting[1])):
 					bossFlag[i] = True
 					bossFlag0[i] = True
-		return await ctx.send(f"```[{', '.join(list(boss_data_dict.keys()))}] 보스 [컷등록]이 완료되었습니다.\n[{command[22][0]}]으로 등록시간을 확인해보세요.```", tts=False)
+				result_boss_name.append(bossData[i][0])
+
+		return await ctx.send(f"```[{', '.join(result_boss_name)}] 보스 [컷등록]이 완료되었습니다.\n[{command[22][0]}]으로 등록시간을 확인해보세요.```", tts=False)
 
 	################ 예상등록 ################ 
 	@commands.command(name=command[44][0], aliases=command[44][1:])
@@ -3734,9 +3738,12 @@ class mainCog(commands.Cog):
 
 		boss_data_list : list = args.split("\n")
 		boss_data_dict : dict = {}
+		result_boss_name : list = []
 
 		for boss_data in boss_data_list:
 			tmp_boss_name = boss_data[boss_data.rfind(": ")+1:].strip()
+			if tmp_boss_name.find(" ") != -1:
+				tmp_boss_name = tmp_boss_name[:tmp_boss_name.find(" ")].strip()
 			tmp_boss_time = boss_data[:boss_data.rfind(" : ")].strip()
 			try:
 				if list(tmp_boss_time).count(":") > 1:
@@ -3778,7 +3785,9 @@ class mainCog(commands.Cog):
 				if tmp_bossTime[i] < now2 + datetime.timedelta(minutes=int(basicSetting[1])):
 					bossFlag[i] = True
 					bossFlag0[i] = True
-		return await ctx.send(f"```[{', '.join(list(boss_data_dict.keys()))}] 보스 [예상등록]이 완료되었습니다.\n[{command[22][0]}]으로 등록시간을 확인해보세요.```", tts=False)
+				result_boss_name.append(bossData[i][0])
+
+		return await ctx.send(f"```[{', '.join(result_boss_name)}] 보스 [예상등록]이 완료되었습니다.\n[{command[22][0]}]으로 등록시간을 확인해보세요.```", tts=False)
 
 	################ 추가등록 ################ 
 	@commands.command(name=command[45][0], aliases=command[45][1:])
@@ -3791,6 +3800,7 @@ class mainCog(commands.Cog):
 
 		input_data_list : list = []
 		input_data_list = args.split()
+		result_boss_name : list = []
 
 		if len(input_data_list) < 3:
 			return await ctx.send(f"```[{command[45][0]}] [시간(00:00)] [추가시간(숫자)] [보스명1] [보스명2] [보스명3] ... 양식으로 입력해주세요.```", tts=False)
@@ -3838,9 +3848,9 @@ class mainCog(commands.Cog):
 				if tmp_bossTime[i] < curr_now + datetime.timedelta(minutes=int(basicSetting[1])):
 					bossFlag[i] = True
 					bossFlag0[i] = True
+				result_boss_name.append(bossData[i][0])
 					
-		return await ctx.send(f"```[{', '.join(list(boss_name_list))}] 보스 [추가등록]이 완료되었습니다.\n[{command[27][0]}]으로 등록시간을 확인해보세요.```", tts=False)
-
+		return await ctx.send(f"```[{', '.join(list(result_boss_name))}] 보스 [추가등록]이 완료되었습니다.\n[{command[27][0]}]으로 등록시간을 확인해보세요.```", tts=False)
 
 	################ ?????????????? ################ 
 	@commands.command(name='!오빠')
